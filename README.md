@@ -4,12 +4,12 @@
 
 ---
 
-## 🐳 Docker Setup
+### 🐳 Docker Setup
 
 ### Create a network for the Docker containers
 
 ```sh
-`docker network create mern`
+docker network create mern
 ```
 
 ### Build the client 
@@ -53,17 +53,20 @@ docker build -t backend-image .
 ### 🔁 API Calls (Frontend)
 To allow the frontend running in Docker to communicate with the backend service inside the same Docker network, we updated all API calls from hardcoded URLs like:
 
-```js
-// ❌ Old (doesn't work inside Docker)
-fetch("http://localhost:5050/record")
 
-// ✅ New (works both inside and outside Docker)
+❌ Old (doesn't work inside Docker)
+```js
+fetch("http://localhost:5050/record")
+```
+✅ New (works both inside and outside Docker)
+```js
 fetch("/record")
+```
 This ensures requests are routed properly whether you're using Docker or running locally with Vite.
 
 ### ⚙️ vite.config.js Changes
 To allow external access (e.g. from browser to Docker container), update your vite.config.js:
-
+```js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -74,15 +77,14 @@ export default defineConfig({
     port: 5173
   }
 });
+```
 This tells Vite to listen on all interfaces, which is necessary when running inside a container.
 
 ### 🧪 Running Locally vs. Docker
-When running locally via npm run dev, remember:
-Use http://localhost:5050 for API requests.
+When running locally via npm run dev, remember: Use http://localhost:5050 for API requests.
 
-You don't need Docker for development, but it helps simulate production behavior.
+You don't need Docker for development, but it helps simulate production behaviour.
 
-When using Docker:
-API requests should be relative paths (e.g., /record, /record/:id, etc.).
+When using Docker, remember: API requests should be relative paths (e.g., /record, /record/:id, etc.).
 
 Vite must be configured to expose its port (see above).
